@@ -6,6 +6,8 @@ var canvas = document.getElementById('canvas'),
 	ww = window.innerWidth,
 	canvas.height = wh,
 	canvas.width = ww,
+    isJump = false,
+    isJumping = false,
   runnerCells = [
     { left: 0,   top: 0, width: 40, height: 64 },
     { left: 43,  top: 0, width: 47, height: 64 },
@@ -81,29 +83,12 @@ SpriteSheetPainter.prototype = {
    animate: function() {
         var _this = this;
 
-        if(runflag) { sprite.advance();}
+        if(isJump == false) { sprite.advance();}
            sprite.paint(context);
            sprite.changeXPos();
    }
 };
 
-canvas.onclick = function() {
-            //var _cellIndex = sprite.cellIndex;
-            //_this.cellIndex = 0;
-
-          timer2 = setInterval(function() {
-                            sprite.startTop = sprite.startTop - 5;
-                            sprite.changeXPos();
-                            runflag = false;
-                            if (sprite.startTop == wh-120) {
-                                clearInterval(timer2);
-                                runflag = true;
-                                //_this.cellIndex = _cellIndex;
-                                sprite.startTop = wh-80;
-                            }
-
-                         },30);
-         }
 //draw the background
 var bg = {
 
@@ -113,9 +98,9 @@ var bg = {
     nearTreeOffset: 0,
 
 	skyVx: 0.8,
-    grassVx: 6,
-    farVx: 2,
-    nearVx: 6,
+    grassVx: 12,
+    farVx: 6,
+    nearVx: 12,
     //draw translate image function
     transFn: function(offset, Vx, arr) {
         var arr = arr;
@@ -266,20 +251,47 @@ var shape = {
 
 var sprite = new SpriteSheetPainter(runnerCells);
 
-    shape.starPos();
-	sky.onload = function(e) {
-        bg.drawDSky();
-        if(timeFlag > 100){
-            bg.drawNSky();
-            shape.updateAl();
-            shape.drawStar();
-        }
-        bg.drawGT();
-        
-        SpriteSheetPainter.prototype.animate();
+shape.starPos();
+sky.onload = function(e) {
+    context.clearRect(0,0,ww,wh);
+    bg.drawDSky();
+    if(timeFlag > 100){
+        bg.drawNSky();
+        shape.updateAl();
+        shape.drawStar();
+    }
+    bg.drawGT();
     
-  };
-  var timer,timer2,runflag = true,timeFlag = 0;
+    SpriteSheetPainter.prototype.animate();
 
-	timer = window.setInterval(function() {sky.onload();timeFlag++;if(timeFlag == 200) timeFlag = 0;},100);
+};
 
+//timer and flag
+var timer,timer2,timeFlag = 0,
+
+timer = window.setInterval(function() {sky.onload();timeFlag++;if(timeFlag == 200) timeFlag = 0;},100);
+
+/**
+* hander
+*/
+
+//click boy 
+function boyJump(e) {
+    isJump = true;
+    isJumping = true;
+    if(isJump && e.type == touchstart) {
+        timer2 = setInterval(function() {
+            sprite.startTop = sprite.startTop - 5;
+            sprite.changeXPos();
+            //isJump = true;
+            if (sprite.startTop == wh-150) {
+                clearInterval(timer2);
+                isJump = false;
+                isJumping = false;
+                sprite.startTop = wh-80;
+            }
+         },10);
+    }
+}
+
+addEvevt(canvas, touchstart, function(e) {if(!isJumping){boyJump(e);}});
