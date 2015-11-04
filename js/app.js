@@ -387,7 +387,7 @@ function Box(maxSize) {
 		}
 		var shipCavs = $$('ship-move');
 		addEvevt(shipCavs,'touchstart',function(e) {
-			console.log(clickX);
+			e.stopPropagation();
 			var point = e.changedTouches[0],
 			    isMove = ((clickX > _this.x && clickX < _this.x + _this.width) &&
 			    		(clickY > _this.y && clickY < _this.y + _this.height));
@@ -396,7 +396,7 @@ function Box(maxSize) {
 
 			_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
 			addEvevt(shipCavs, 'touchmove', function(e) {
-				
+				e.stopPropagation();
 				if(isMove) {
 					_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
 					clickX = 0;
@@ -408,7 +408,7 @@ function Box(maxSize) {
 				
 			});
 			addEvevt(shipCavs, 'touchend', function(e) {
-				
+				e.stopPropagation();
 				if (isMove) {
 					_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
 					clickX = 0;
@@ -488,7 +488,7 @@ Ship.prototype = new RemoveAble();
 	
 	//开炮
 	this.fire = function() {
-		game.enemyBBox.get(this.x + this.width/2, this.y + this.height, this.speed + 2);
+		game.enemyBBox.get(this.x + this.width/2, this.y + this.height, this.speed + 5);
 	}
 
 	//清除
