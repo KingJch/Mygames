@@ -81,7 +81,7 @@ function Game() {
 			//this.enemyArr = this.enemyShip.getPool();
 			this.getP = new ObjProp();
 			//初始敌军子弹量
-			this.enemyBBox = new Box(100);
+			this.enemyBBox = new Box(2);
 			this.enemyBBox.init("enemyBullet");
 
 			return true;
