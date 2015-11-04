@@ -81,7 +81,7 @@ function Game() {
 			//this.enemyArr = this.enemyShip.getPool();
 			this.getP = new ObjProp();
 			//初始敌军子弹量
-			this.enemyBBox = new Box(2);
+			this.enemyBBox = new Box(100);
 			this.enemyBBox.init("enemyBullet");
 
 			return true;
@@ -103,7 +103,7 @@ function Game() {
 	requestAnimFrame( animate );
 	game.background.draw();
 	game.ship.autoFire();
-	game.ship.draw();
+	//game.ship.draw();
 	game.ship.bulletPool.animate(); 
 	game.enemyShip.animate();
 	game.enemyMove();
@@ -373,54 +373,90 @@ function Box(maxSize) {
 	 */
 	this.move = function() {	
 		
-		var _this = this,clickX = 0, clickY = 0;
+		var _this = this,
+			clickX = 0, 
+			clickY = 0,
+			isMove = false;
 		//this.draw();
 		var touchMove = function(e) {
-			var point = e.changedTouches[0];
+			var point = e.targetTouches[0];
 			_this.x = point.pageX;
 			_this.y = point.pageY;
 		}
 		var touchEnd = function(e) {
-			var point = e.changedTouches[0];
+			var point = e.targetTouches[0];
 			_this.x = point.pageX;
 			_this.y = point.pageY;
 		}
 		var shipCavs = $$('ship-move');
-		addEvevt(shipCavs,'touchstart',function(e) {
-			e.stopPropagation();
-			var point = e.changedTouches[0],
-			    isMove = ((clickX > _this.x && clickX < _this.x + _this.width) &&
-			    		(clickY > _this.y && clickY < _this.y + _this.height));
-			clickX = point.pageX;
-			clickY = point.pageY;console.log(clickX);console.log(isMove)
 
-			_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
-			addEvevt(shipCavs, 'touchmove', function(e) {
-				e.stopPropagation();
-				if(isMove) {
-					_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
-					clickX = 0;
-					clickY = 0;
-					touchMove(e);
-					
+		addEvevt(shipCavs,'touchstart',function(e) {
+			if(e.targetTouches.length == 1) {
+				_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
+				var point = e.targetTouches[0];
+				if(Math.abs(point.pageX - _this.x) <= _this.width && 
+					Math.abs(point.pageY - _this.y) <= _this.height) {
+					isMove = true;
+					_this.x = point.pageX;
+					_this.y = point.pageY;
 					_this.draw();
 				}
-				
-			});
-			addEvevt(shipCavs, 'touchend', function(e) {
-				e.stopPropagation();
-				if (isMove) {
-					_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
-					clickX = 0;
-					clickY = 0;
-					touchEnd(e);
-					
-					_this.draw();
-				}
-				
-			});
+			}
 			
 		});
+
+		addEvevt(shipCavs,'touchmove',function(e) {
+			if(e.targetTouches.length == 1 && isMove) {
+				_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
+				var point = e.targetTouches[0];
+					_this.x = point.pageX;
+					_this.y = point.pageY;
+					_this.draw();
+				}			
+		});
+
+		addEvevt(shipCavs,'touchmove',function(e) {
+			_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
+			isMove = false;
+			touchEnd(e);
+			_this.draw();
+			
+		});
+		// addEvevt(shipCavs,'touchstart',function(e) {
+		// 	console.log(clickX);
+		// 	var point = e.targetTouches[0],
+		// 	    isMove = ((clickX > _this.x && clickX < _this.x + _this.width) &&
+		// 	    		(clickY > _this.y && clickY < _this.y + _this.height));
+		// 	clickX = point.pageX;
+		// 	clickY = point.pageY;console.log(clickX);console.log(isMove)
+
+		// 	_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
+		// 	addEvevt(shipCavs, 'touchmove', function(e) {
+				
+		// 		if(isMove) {
+		// 			_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
+		// 			clickX = 0;
+		// 			clickY = 0;
+		// 			touchMove(e);
+					
+		// 			_this.draw();
+		// 		}
+				
+		// 	});
+		// 	addEvevt(shipCavs, 'touchend', function(e) {
+				
+		// 		if (isMove) {
+		// 			_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
+		// 			clickX = 0;
+		// 			clickY = 0;
+		// 			touchEnd(e);
+					
+		// 			_this.draw();
+		// 		}
+				
+		// 	});
+			
+		// });
 		
 	};
 	/**
