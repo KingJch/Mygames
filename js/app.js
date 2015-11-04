@@ -103,7 +103,7 @@ function Game() {
 	requestAnimFrame( animate );
 	game.background.draw();
 	game.ship.autoFire();
-	//game.ship.draw();
+	game.ship.draw();
 	game.ship.bulletPool.animate(); 
 	game.enemyShip.animate();
 	game.enemyMove();
@@ -364,6 +364,7 @@ function Box(maxSize) {
 	 * 画船
 	 */
 	this.draw = function() {
+		this.context.clearRect(this.x, this.y, this.width, this.height);
 		if (!this.isCollided) this.context.drawImage(imageRepository.spaceship, this.x, this.y);
 		else this.context.clearRect(this.x, this.y, this.width, this.height);
 	};
@@ -392,14 +393,16 @@ function Box(maxSize) {
 
 		addEvevt(shipCavs,'touchstart',function(e) {
 			if(e.targetTouches.length == 1) {
-				_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
+				//
 				var point = e.targetTouches[0];
+				//_this.draw();
 				if(Math.abs(point.pageX - _this.x) <= _this.width && 
 					Math.abs(point.pageY - _this.y) <= _this.height) {
+					_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
 					isMove = true;
 					_this.x = point.pageX;
 					_this.y = point.pageY;
-					_this.draw();
+					
 				}
 			}
 			
@@ -415,11 +418,11 @@ function Box(maxSize) {
 				}			
 		});
 
-		addEvevt(shipCavs,'touchmove',function(e) {
-			_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
+		addEvevt(shipCavs,'touchend',function(e) {
+			//////_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
 			isMove = false;
-			touchEnd(e);
-			_this.draw();
+			//touchEnd(e);
+			//////_this.draw();
 			
 		});
 		// addEvevt(shipCavs,'touchstart',function(e) {
