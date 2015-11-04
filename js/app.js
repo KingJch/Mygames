@@ -391,7 +391,9 @@ function Box(maxSize) {
 		}
 		var shipCavs = $$('ship-move');
 
+		//addEvevt('body',)
 		addEvevt(shipCavs,'touchstart',function(e) {
+			e.preventDefault();
 			if(e.targetTouches.length == 1) {
 				//
 				var point = e.targetTouches[0];
@@ -409,6 +411,7 @@ function Box(maxSize) {
 		});
 
 		addEvevt(shipCavs,'touchmove',function(e) {
+			e.preventDefault();
 			if(e.targetTouches.length == 1 && isMove) {
 				_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
 				var point = e.targetTouches[0];
@@ -419,6 +422,7 @@ function Box(maxSize) {
 		});
 
 		addEvevt(shipCavs,'touchend',function(e) {
+			e.preventDefault();
 			//////_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
 			isMove = false;
 			//touchEnd(e);
