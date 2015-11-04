@@ -3,22 +3,39 @@
 <head>
 	<meta charset="UTF-8">
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
-	<title>canvas-runboy</title>
+	<title>飞机大战</title>
 	<style>
-	  body {
-	  	margin: 0 auto;
-	  }
-		#canvas {
-			display: block;
-			margin: 0 0;
+		canvas {
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				display: block;
+				background: transparent;
+			}
+		#background {
+			z-index: 0;
+		}
+		#main {
+			z-index: 1;
+		}
+		#ship-move {
+			z-index: 2;
 		}
 	</style>
 </head>
 <body>
-	<canvas id='canvas'>
-      Canvas not supported
-  </canvas>
-  <script src="js/common.js"></script>
-	<script src="js/canvas-runboy1.js"></script>
+	<!--游戏背景画布-->
+	<canvas id="background">
+		你的浏览器不支持canvas！
+	</canvas>
+
+	<!--飞船、敌人、子弹画布-->
+	<canvas id="main"></canvas>
+
+	<!--飞船移动画布-->
+	<canvas id="ship-move"></canvas>
+
+	<script src="js/common.js"></script>
+	<script src="js/app.js"></script>
 </body>
 </html>
