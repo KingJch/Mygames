@@ -373,8 +373,8 @@ function Box(maxSize) {
 	 */
 	this.move = function() {	
 		
-		var _this = this;
-		this.draw();
+		var _this = this,clickX = 0, clickY = 0;
+		//this.draw();
 		var touchMove = function(e) {
 			var point = e.changedTouches[0];
 			_this.x = point.pageX;
@@ -387,17 +387,39 @@ function Box(maxSize) {
 		}
 		var shipCavs = $$('ship-move');
 		addEvevt(shipCavs,'touchstart',function(e) {
+			console.log(clickX);
+			var point = e.changedTouches[0],
+			    isMove = ((clickX > _this.x && clickX < _this.x + _this.width) &&
+			    		(clickY > _this.y && clickY < _this.y + _this.height));
+			clickX = point.pageX;
+			clickY = point.pageY;console.log(clickX);console.log(isMove)
 
+			_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
 			addEvevt(shipCavs, 'touchmove', function(e) {
-				_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
-				touchMove(e);
-				_this.draw();
+				
+				if(isMove) {
+					_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
+					clickX = 0;
+					clickY = 0;
+					touchMove(e);
+					
+					_this.draw();
+				}
+				
 			});
 			addEvevt(shipCavs, 'touchend', function(e) {
-				_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
-				touchEnd(e);
-				_this.draw();
+				
+				if (isMove) {
+					_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
+					clickX = 0;
+					clickY = 0;
+					touchEnd(e);
+					
+					_this.draw();
+				}
+				
 			});
+			
 		});
 		
 	};
