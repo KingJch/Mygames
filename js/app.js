@@ -81,7 +81,7 @@ function Game() {
 			//this.enemyArr = this.enemyShip.getPool();
 			this.getP = new ObjProp();
 			//初始敌军子弹量
-			this.enemyBBox = new Box(8);
+			this.enemyBBox = new Box(2);
 			this.enemyBBox.init("enemyBullet");
 
 			return true;
@@ -391,7 +391,7 @@ function Box(maxSize) {
 		}
 		var shipCavs = $$('ship-move');
 
-		//addEvevt('body',)
+		//addEvevt('body',"touchstart",function() {console.log(11)});
 		addEvevt(shipCavs,'touchstart',function(e) {
 			e.preventDefault();
 			if(e.targetTouches.length == 1) {
@@ -531,7 +531,7 @@ Ship.prototype = new RemoveAble();
 	
 	//开炮
 	this.fire = function() {
-		game.enemyBBox.get(this.x + this.width/2, this.y + this.height, this.speed + 5);
+		game.enemyBBox.get(this.x + this.width/2, this.y + this.height, this.speed + 2);
 	}
 
 	//清除
