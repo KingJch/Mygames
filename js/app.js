@@ -70,7 +70,7 @@ function Game() {
 			               imageRepository.spaceship.height);
 
 			//敌军飞船
-			this.enemyShip = new Box(2);
+			this.enemyShip = new Box(8);
 			this.enemyShip.init("enemy");
 			this.enemyMove = function() {
 				var eStartX = (ww - 20) * Math.random();
@@ -81,7 +81,7 @@ function Game() {
 			//this.enemyArr = this.enemyShip.getPool();
 			this.getP = new ObjProp();
 			//初始敌军子弹量
-			this.enemyBBox = new Box(100);
+			this.enemyBBox = new Box(8);
 			this.enemyBBox.init("enemyBullet");
 
 			return true;
