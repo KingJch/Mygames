@@ -338,7 +338,7 @@ Background.prototype = new RemoveAble();
 
 	//画子弹
 	this.draw = function() {
-		this.context.clearRect(this.x, this.y, this.width, this.height);
+		this.context.clearRect(this.x, this.y, this.width + 2, this.height + 2);
 		/*
 		 * 对象移动
 		 */
@@ -510,7 +510,7 @@ function Box(maxSize) {
 	 * 画船
 	 */
 	this.draw = function() {
-		this.context.clearRect(this.x, this.y, this.width, this.height);
+		this.context.clearRect(this.x, this.y, this.width + 2, this.height + 2);
 
 		if(this.isCollided) {game.shipLife--; this.isCollided = false;} //玩家飞船被击中减血
 		if(game.isGetLifes) {game.shipLife++; game.isGetLifes = false;} //玩家加血
@@ -627,7 +627,7 @@ Ship.prototype = new RemoveAble();
 
 	//画敌人飞船
 	this.draw = function() {
-		this.context.clearRect(this.x, this.y, this.width, this.height);
+		this.context.clearRect(this.x, this.y, this.width + 2, this.height + 2);
 		this.y += this.speed;
 		counter++;
 		if (this.y >= this.cavsHeight || this.isCollided) {
