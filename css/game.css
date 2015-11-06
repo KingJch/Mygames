@@ -1,0 +1,55 @@
+body, html {
+	font-family : helvetica,'微软雅黑';
+	margin: 0 auto;
+}
+
+#game-wappeer {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+canvas {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		display: block;
+		background: transparent;
+	}
+#background {
+	z-index: 0;
+}
+#main {
+	z-index: 1;
+}
+#ship-move {
+	z-index: 2;
+}
+#user-ship {
+	z-index: 3;
+}
+
+#score-wapper {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 200px;
+	font-size: 18px;
+	color: #fff;
+	z-index: 4;
+}
+#score {
+	font-size: 20px;
+	color: #ADB655;
+}
+#life {
+	position: absolute;
+	top: 30px;
+	left: 5px;
+	width: 60px;
+	padding-left: 26px;
+	font-size: 20px;
+	color: #ADB655;
+	background: url(../imgs/life.png) no-repeat;
+	background-size: 20px 20px;
+	z-index: 4;
+}
