@@ -81,8 +81,16 @@ canvas {
     -o-transform: translateX(-50%);
     -moz-transform: translateX(-50%);
     animation: show-intro 2s 1 both;
+    -webkit-animation: show-intro 2s 1 both;
+    -o-animation: show-intro 2s 1 both;
 }
 @-webkit-keyframes show-intro {
+	0% {opacity: .2}
+	40{opacity: .4}
+	70% {opacity: .5}
+	100% {opacity: 1}
+}
+@-o-keyframes show-intro {
 	0% {opacity: .2}
 	40{opacity: .4}
 	70% {opacity: .5}
@@ -102,6 +110,8 @@ canvas {
 	font-size: 18px;
 	color: #fff;
 	background: linear-gradient(360deg, #4873AF, #1632BD, #3D9891);
+	background: -webkit-linear-gradient(360deg, #4873AF, #1632BD, #3D9891);
+	background: -o-linear-gradient(360deg, #4873AF, #1632BD, #3D9891);
 	border: 1px solid #495085;
 	border-radius: 10px;
 	transform: translateX(-50%);
