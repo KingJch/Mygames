@@ -244,22 +244,22 @@ function Game() {
 		game.enemyMove();
 
 		//循环设定boss1的出现
-		if(game.gameScore > 0 && game.gameScore % 2000 == 0) {
+		if(game.gameScore > 0 && game.gameScore % 1000 == 0) {
 			game.enemyBoss.lifeCount = 30;
 		}
 
-		if(game.enemyBoss.lifeCount > 0 && game.gameScore > 1000) {
+		if(game.enemyBoss.lifeCount > 0 && game.gameScore > 500) {
 			game.enemyBoss.move();
 		} else {game.enemyBoss.x = game.mainCavs.width + 60; game.enemyBoss.y = -60}
 
 		game.enemyBoss.bulletPool.animate();
 
 		//循环设定boss1的出现
-		if(game.gameScore > 0 && game.gameScore % 3000 == 0) {
+		if(game.gameScore > 0 && game.gameScore % 2000 == 0) {
 			game.enemyBoss3.lifeCount = 30;
 		}
 
-		if(game.enemyBoss3.lifeCount > 0 && game.gameScore > 1500) {
+		if(game.enemyBoss3.lifeCount > 0 && game.gameScore > 1000) {
 			game.enemyBoss3.move();
 		} else {game.enemyBoss3.x = -60; game.enemyBoss3.y = -60}
 
@@ -459,9 +459,9 @@ function Background() {
 	// 画背景
 	this.draw = function() {var _this = this;
 		this.y += this.speed;
-		if(game.gameScore > 4000 && game.gameScore < 7500) this.bgNum = 1;
-		else if(game.gameScore > 7500 && game.gameScore < 18000) this.bgNum = 2;
-		else if(game.gameScore > 15000) this.bgNum = 3;
+		if(game.gameScore > 1500 && game.gameScore < 3500) this.bgNum = 1;
+		else if(game.gameScore > 4500 && game.gameScore < 10000) this.bgNum = 2;
+		else if(game.gameScore > 12000) this.bgNum = 3;
 		this.context.drawImage(imageRepository.background[this.bgNum], this.x, this.y, this.width, this.height);
 		
 		// 实现背景无缝移动
