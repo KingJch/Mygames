@@ -32,7 +32,7 @@ canvas {
 
 #score-wapper {
 	position: absolute;
-	top: 5px;
+	top: 30px;
 	left: 5px;
 	width: 200px;
 	font-size: 18px;
@@ -45,7 +45,7 @@ canvas {
 }
 #life {
 	position: absolute;
-	top: 30px;
+	top: 60px;
 	left: 5px;
 	width: 60px;
 	padding-left: 26px;
@@ -54,6 +54,20 @@ canvas {
 	background: url(../imgs/life.png) no-repeat;
 	background-size: 20px 20px;
 	z-index: 4;
+}
+
+#ranks-wapper {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 140px;
+	font-size: 18px;
+	color: #fff;
+	z-index: 4;
+}
+#user-ranks {
+	font-size: 20px;
+	color: #ADB655;
 }
 
 /**gameOver**/
@@ -96,6 +110,7 @@ canvas {
     -o-transform: translateX(-50%);
     -moz-transform: translateX(-50%);
 }
+
 /**start-wapper**/
 
 #start-wapper {

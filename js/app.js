@@ -222,6 +222,16 @@ function Game() {
 	document.getElementById('score').innerHTML = game.gameScore; //分数
 	document.getElementById('life').innerHTML = game.shipLife; //生命值
 
+	if(game.gameScore > 3000 && game.gameScore < 10000) {
+		$$('user-ranks').innerHTML = "太空上将";
+	}
+		else if(game.gameScore > 10000 && game.gameScore < 20000) {
+			$$('user-ranks').innerHTML = "宇宙上将";
+		}
+		else if(game.gameScore > 20000) {
+			$$('user-ranks').innerHTML = "宇宙司令";
+		}
+
 	game.getP.clear();
 	game.getP.inset(game.getLifes.getPool());
 	game.getP.inset(game.enemyShip.getPool());
@@ -681,9 +691,20 @@ function Box(maxSize) {
 		if (game.shipLife > 0) this.context.drawImage(imageRepository.spaceship, this.x, this.y);
 		else {
 			this.context.clearRect(this.x, this.y, this.width + 5, this.height + 5);
-			if(game.gameScore > 5000 && game.gameScore < 15000) $$('rank').innerHTML = "太空上将";
-				else if(game.gameScore > 15000 && game.gameScore < 25000) $$('rank').innerHTML = "宇宙上将";
-				else if(game.gameScore > 25000) $$('rank').innerHTML = "宇宙司令";
+
+			if(game.gameScore > 5000 && game.gameScore < 15000) {
+				$$('rank').innerHTML = "太空上将";
+				$$('user-ranks').innerHTML = "太空上将";
+			}
+				else if(game.gameScore > 15000 && game.gameScore < 25000) {
+					$$('rank').innerHTML = "宇宙上将";
+					$$('user-ranks').innerHTML = "宇宙上将";
+				}
+				else if(game.gameScore > 25000) {
+					$$('rank').innerHTML = "宇宙司令";
+					$$('user-ranks').innerHTML = "宇宙司令";
+				}
+
 			$$('game-over').style.display = "block";
 			game.gameOver();
 			this.alive = false;
