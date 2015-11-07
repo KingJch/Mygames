@@ -244,7 +244,7 @@ function Game() {
 		game.enemyMove();
 
 		//循环设定boss1的出现
-		if(game.gameScore > 0 && game.gameScore % 1000 == 0) {
+		if(game.gameScore > 0 && game.gameScore % 2000 == 0) {
 			game.enemyBoss.lifeCount = 30;
 		}
 
@@ -255,7 +255,7 @@ function Game() {
 		game.enemyBoss.bulletPool.animate();
 
 		//循环设定boss1的出现
-		if(game.gameScore > 0 && game.gameScore % 2000 == 0) {
+		if(game.gameScore > 0 && game.gameScore % 3000 == 0) {
 			game.enemyBoss3.lifeCount = 30;
 		}
 
@@ -266,11 +266,11 @@ function Game() {
 		game.enemyBoss3.bulletPool.animate();
 
 		//循环设定boss2的出现
-		if(game.gameScore > 0 && game.gameScore % 5000 == 0) {
+		if(game.gameScore > 0 && game.gameScore % 4000 == 0) {
 			game.enemyBoss1.lifeCount = 100;
 		}
 
-		if(game.enemyBoss1.lifeCount > 0 && game.gameScore > 8000) {
+		if(game.enemyBoss1.lifeCount > 0 && game.gameScore > 4000) {
 			game.enemyBoss1.move();
 		} else {game.enemyBoss1.x = -120; game.enemyBoss1.y = -60}
 
@@ -719,8 +719,8 @@ function Box(maxSize) {
 				//
 				var point = e.targetTouches[0];
 				//_this.draw();
-				if((point.pageX >= _this.x && point.pageX <= _this.x + _this.width)  && 
-					(point.pageY >= _this.y && point.pageY <= _this.y + _this.height) ) {
+				if((point.pageX >= _this.x - 15 && point.pageX <= _this.x + _this.width + 15)  && 
+					(point.pageY >= _this.y - 15 && point.pageY <= _this.y + _this.height + 15) ) {
 					_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
 					isMove = true;
 					_this.x = point.pageX - _this.width / 2;
