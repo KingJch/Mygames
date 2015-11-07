@@ -203,6 +203,8 @@ function Game() {
 		this.gameScore = 0;
 		this.shipLife = 3;
 
+		$$('user-ranks').innerHTML = "天空上将";
+
 		this.backgroundAudio.currentTime = 0;
 		this.backgroundAudio.play();
 
