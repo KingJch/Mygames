@@ -1,6 +1,7 @@
 body, html {
 	font-family : helvetica,'微软雅黑';
 	margin: 0 auto;
+	height: 100%;
 }
 
 #game-wappeer {
@@ -55,7 +56,48 @@ canvas {
 	z-index: 4;
 }
 
+/**gameOver**/
+#game-over {
+	display: none;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.65);
+	z-index: 5;
+}
+.over-info {
+	position: absolute;
+	top: 40%;
+	left: 50%;
+
+	width: 50%;
+	height: 100px;
+	transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    background: -webkit-linear-gradient(360deg, #6DC4D5, #2C2E38, #B5D57B);
+    background: -moz-linear-gradient(bottom, #6DC4D5, #2C2E38, #B5D57B);
+    background: -o-linear-gradient(360deg, #6DC4D5, #2C2E38, #B5D57B);
+}
+#rank {
+	position: absolute;
+    bottom: 60%;
+    text-align: center;
+    left: 50%;
+    font-size: 19px;
+    line-height: 2;
+    width: 70%;
+    color: #F7CD0D;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+}
 /**start-wapper**/
+
 #start-wapper {
 	display: none;
 	position: absolute;
@@ -65,7 +107,9 @@ canvas {
 	height: 100%;
 	background: url(../imgs/loading-pic.jpg) no-repeat;
 	background-size: 100% 100%;
+
 }
+
 #game-intro {
 	position: absolute;
     bottom: 60%;
@@ -75,37 +119,39 @@ canvas {
     line-height: 2;
     width: 70%;
     color: #0DEFF7;
-    opacity: 0;
+    opacity: .5;
     transform: translateX(-50%);
     -webkit-transform: translateX(-50%);
     -o-transform: translateX(-50%);
     -moz-transform: translateX(-50%);
     animation: show-intro 2s 1 both;
-    -webkit-animation: show-intro 2s 1 both;
-    -o-animation: show-intro 2s 1 both;
+    -webkit-animation: show-intro 1.5s 1 both;
+    -o-animation: show-intro 1.5s 1 both;
+    -moz-animation: show-intro 1.5s 1 both;
 }
 @-webkit-keyframes show-intro {
-	0% {opacity: .2}
-	40{opacity: .4}
-	70% {opacity: .5}
-	100% {opacity: 1}
+	0% {opacity: .2;}
+	40{opacity: .4;}
+	70% {opacity: .5;}
+	100% {opacity: 1;}
 }
 @-o-keyframes show-intro {
-	0% {opacity: .2}
-	40{opacity: .4}
-	70% {opacity: .5}
-	100% {opacity: 1}
+	0% {opacity: .2;}
+	40{opacity: .4;}
+	70% {opacity: .5;}
+	100% {opacity: 1;}
 }
 @keyframes show-intro {
-	0% {opacity: .2}
-	40{opacity: .4}
-	70% {opacity: .5}
-	100% {opacity: 1}
+	0% {opacity: .2;}
+	40{opacity: .4;}
+	70% {opacity: .5;}
+	100% {opacity: 1;}
 }
-#start-btn {
+#start-btn, #restart-btn {
 	position: absolute;
 	bottom: 30%;
 	left: 50%;
+	width: 78px;
 	padding: 8px 13px;
 	font-size: 18px;
 	color: #fff;
@@ -120,3 +166,4 @@ canvas {
 	-moz-transform: translateX(-50%);
 	cursor: pointer;
 }
+#restart-btn {bottom: 0;}

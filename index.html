@@ -14,6 +14,7 @@
 			width: 100%;
 			background: -webkit-linear-gradient(360deg, #867B83, #846F49, #775B6F);
 			background: linear-gradient(360deg, #867B83, #846F49, #775B6F);
+			background: -moz-linear-gradient(360deg, #867B83, #846F49, #775B6F);
 			overflow: hidden;
 			
 		}
@@ -29,6 +30,8 @@
     		color: #D9EF09;
     		animation: loading-color 1s infinite;
     		-webkit-animation: loading-color 1s infinite;
+    		-moz-animation: loading-color 1s infinite;
+    		-o-animation: loading-color 1s infinite;
 		}
 
 		@-webkit-keyframes loading-color {
@@ -38,6 +41,18 @@
 			95% {color: #14E6DA;}
 		}
 		@keyframes loading-color {
+			0% {color: #D9EF09;}
+			40{color: #E69A14;}
+			70% {color: #14E618;}
+			95% {color: #14E6DA;}
+		}
+		@-moz-keyframes loading-color {
+			0% {color: #D9EF09;}
+			40{color: #E69A14;}
+			70% {color: #14E618;}
+			95% {color: #14E6DA;}
+		}
+		@-o-keyframes loading-color {
 			0% {color: #D9EF09;}
 			40{color: #E69A14;}
 			70% {color: #14E618;}
@@ -54,9 +69,17 @@
 	<!--开始界面-->
 	<div id="start-wapper">
 		<p id="game-intro">
-			宇宙被巴拉巴拉外星人给占领，地球处于一片黑暗，现在你被任命去夺回宇宙。
+			宇宙被喵咕噜星www外星人给占领，地球处于一片黑暗，现在你被任命去夺回宇宙。
 		</p>
-		<div id="start-btn">开始游戏</div>
+		<div id="start-btn">开始征战</div>
+	</div>
+	
+	<div id="game-over">
+		<div class="over-info">
+			<div id="rank">天空上将</div>
+			<div id="restart-btn">再次征战</div>
+		</div>
+		
 	</div>
 
 	<div id="game-wappeer">
