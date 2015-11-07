@@ -102,7 +102,7 @@ function Game() {
 						   imageRepository.enemyBoss[0].width,
 			               imageRepository.enemyBoss[0].height);
 
-			this.enemyBoss.setSp(1, 1, 30, 0);
+			this.enemyBoss.setSp(.5, 1.2, 30, 0);
 
 			//enemyBoss2
 			this.enemyBoss1 = new EnemyBoss();
@@ -110,7 +110,7 @@ function Game() {
 			this.enemyBoss1.init(-imageRepository.enemyBoss[1].width, -imageRepository.enemyBoss[1].height, 
 						   imageRepository.enemyBoss[1].width,
 			               imageRepository.enemyBoss[1].height);
-			this.enemyBoss1.setSp(1.2, 0.8, 100, 1);
+			this.enemyBoss1.setSp(1.2, 0.8, 80, 1);
 
 			//enemyBoss3
 			this.enemyBoss3 = new EnemyBoss();
@@ -267,7 +267,7 @@ function Game() {
 
 		//循环设定boss2的出现
 		if(game.gameScore > 0 && game.gameScore % 4000 == 0) {
-			game.enemyBoss1.lifeCount = 100;
+			game.enemyBoss1.lifeCount = 80;
 		}
 
 		if(game.enemyBoss1.lifeCount > 0 && game.gameScore > 4000) {
