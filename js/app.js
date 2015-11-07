@@ -81,7 +81,7 @@ function Game() {
 			/*
 			 *敌军飞船
 			 */
-			this.enemyShip = new Box(9);
+			this.enemyShip = new Box(8);
 			this.enemyShip.init("enemy");
 			this.enemyMove = function() {
 				var eStartX = (ww - 20) * Math.random();
@@ -95,13 +95,23 @@ function Game() {
 			//this.enemyBBox = new Box(6);
 			//this.enemyBBox.init("enemyBullet");
 
-			//enemyBoss
+			//enemyBoss1
 			this.enemyBoss = new EnemyBoss();
-			this.enemyBossX = this.shipCavs.width/2 - imageRepository.enemyBoss1.width/2;
-			this.enemyBossY = imageRepository.enemyBoss1.height;
-			this.enemyBoss.init(this.enemyBossX, this.enemyBossY, imageRepository.enemyBoss1.width,
-			               imageRepository.enemyBoss1.height);
-			this.enemyBoss.setSp(1, 1, 10);
+
+			this.enemyBoss.init(this.mainCavs.width, -imageRepository.enemyBoss[0].height,
+						   imageRepository.enemyBoss[0].width,
+			               imageRepository.enemyBoss[0].height);
+
+			this.enemyBoss.setSp(1, 1, 30, 0);
+
+			//enemyBoss2
+			this.enemyBoss1 = new EnemyBoss();
+
+			this.enemyBoss1.init(-imageRepository.enemyBoss[1].width, -imageRepository.enemyBoss[1].height, 
+						   imageRepository.enemyBoss[1].width,
+			               imageRepository.enemyBoss[1].height);
+			this.enemyBoss1.setSp(1.2, 0.8, 100, 1);
+
 
 			/*
 			 * 奖励血
@@ -119,12 +129,12 @@ function Game() {
 			/*
 			 *游戏声音
 			 */
-			this.voicePool = new SoundPool(15);
+			this.voicePool = new SoundPool(100);
 			this.voicePool.init("explosion");
 
 			this.backgroundAudio = new Audio("sounds/kick_shock.wav");
 			this.backgroundAudio.loop = true;
-			this.backgroundAudio.volume = 0;
+			this.backgroundAudio.volume = .25;
 			this.backgroundAudio.load();
 			
 
@@ -170,6 +180,7 @@ function Game() {
 		this.getP.clear();
 
 		this.background.init(0, 0, ww, wh);
+		this.background.bgNum = 0;
 
 		this.ship.init(this.shipStartX, this.shipStartY, imageRepository.spaceship.width,
 			               imageRepository.spaceship.height);
@@ -205,6 +216,7 @@ function Game() {
 	game.getP.inset(game.enemyShip.getPool());
 	game.getP.inset(game.ship.bulletPool.getPool());
 	game.getP.inset(game.enemyBoss.bulletPool.getPool());
+	game.getP.inset(game.enemyBoss1.bulletPool.getPool());
 	DetectCollision();
 
 	if(game.ship.alive) {
@@ -220,14 +232,30 @@ function Game() {
 		game.enemyShip.animate();
 		game.enemyMove();
 
-		//game.enemyBoss.autoFire();
-		if(game.enemyBoss.lifeCount > 0 && game.gameScore > 1000) {
-			game.enemyBoss.move();
+		//循环设定boss1的出现
+		if(game.gameScore > 0 && game.gameScore % 2000 == 0) {
+			game.enemyBoss.lifeCount = 30;
 		}
-		game.enemyBoss.bulletPool.animate();
-		
 
-		if(game.gameScore > 0 &&　game.gameScore % 200 == 0) {
+		if(game.enemyBoss.lifeCount > 0 && game.gameScore > 3000) {
+			game.enemyBoss.move();
+		} else {game.enemyBoss.x = -60; game.enemyBoss.y = -60}
+
+		game.enemyBoss.bulletPool.animate();
+
+		//循环设定boss2的出现
+		if(game.gameScore > 0 && game.gameScore % 5000 == 0) {
+			game.enemyBoss1.lifeCount = 100;
+		}
+
+		if(game.enemyBoss1.lifeCount > 0 && game.gameScore > 8000) {
+			game.enemyBoss1.move();
+		} else {game.enemyBoss1.x = -120; game.enemyBoss1.y = -60}
+
+		game.enemyBoss1.bulletPool.animate();
+
+
+		if(game.gameScore > 0 &&　game.gameScore % 3000 == 0) {
 			game.isLifeMove = true;
 		}
 		if(game.gameScore > 0 && game.isLifeMove) {
@@ -244,18 +272,25 @@ function Game() {
  */
 var imageRepository = new function() {
 
-	this.background = new Array(3); //不同关卡背景图
+	this.background = new Array(4); //不同关卡背景图
 	for(var i = 0; i < this.background.length; i++) {
 		this.background[i] = new Image();
 	}
+
+	//boss
+	this.enemyBoss = new Array(2);
+	for(var i = 0; i < this.enemyBoss.length; i++) {
+		this.enemyBoss[i] = new Image();
+	}
+
 	this.spaceship = new Image();
 	this.bullet = new Image();
 	this.enemy = new Image();
-	this.enemyBoss1 = new Image();
+	
 	this.enemyBullet = new Image();
 	this.shipLifes = new Image();
 
-	var numImages = 8;
+	var numImages = 10;
 	var numLoaded = 0;
 	function imageLoaded() {
 		numLoaded++;
@@ -269,6 +304,12 @@ var imageRepository = new function() {
 		}
 	}
 	
+	for(var i = 0; i < this.enemyBoss.length; i++) {
+		this.enemyBoss[i].onload = function() {
+			imageLoaded();
+		}
+	}
+
 	this.spaceship.onload = function() {
 		imageLoaded();
 	}
@@ -278,9 +319,8 @@ var imageRepository = new function() {
 	this.enemy.onload = function() {
 		imageLoaded();
 	}
-	this.enemyBoss1.onload = function() {
-		imageLoaded();
-	}
+
+
 	this.enemyBullet.onload = function() {
 		imageLoaded();
 	}
@@ -292,11 +332,13 @@ var imageRepository = new function() {
 		this.background[j].src = 'imgs/bg' + j +'.jpg';
 	 }
 	
+	for(var j = 0; j < this.enemyBoss.length; j++) {
+		this.enemyBoss[j].src = 'imgs/enemyBoss' + j +'.png';
+	 }
 
 	this.spaceship.src = "imgs/ship.png";
 	this.bullet.src = "imgs/bullet.png";
 	this.enemy.src = "imgs/enemy1_fly_1.png";
-	this.enemyBoss1.src = "imgs/enemyBoss1.png";
 	this.enemyBullet.src = "imgs/bullet-enemy.png";
 	this.shipLifes.src = "imgs/life.png";
 }
@@ -377,7 +419,9 @@ function Background() {
 	// 画背景
 	this.draw = function() {var _this = this;
 		this.y += this.speed;
-		if(game.gameScore > 1000) this.bgNum = 1;
+		if(game.gameScore > 4000 && game.gameScore < 7500) this.bgNum = 1;
+		else if(game.gameScore > 7500 && game.gameScore < 18000) this.bgNum = 2;
+		else if(game.gameScore > 18000) this.bgNum = 3;
 		this.context.drawImage(imageRepository.background[this.bgNum], this.x, this.y, this.width, this.height);
 		
 		// 实现背景无缝移动
@@ -407,7 +451,7 @@ Background.prototype = new RemoveAble();
 
 	//画子弹
 	this.draw = function() {
-		this.context.clearRect(this.x, this.y, this.width, this.height);
+		this.context.clearRect(this.x, this.y, this.width + 5, this.height + 5);
 		/*
 		 * 对象移动
 		 */
@@ -583,20 +627,20 @@ function Box(maxSize) {
 	this.type = "Ship"; //该对象
 	//this.collideWith = "enemyBullet";
 
-	var fireRate = 10;
+	var fireRate = 20;
 	var counter = 0;
 	/**
 	 * 画船
 	 */
 	this.draw = function() {
-		this.context.clearRect(this.x, this.y, this.width, this.height);
+		this.context.clearRect(this.x, this.y, this.width + 5, this.height + 5);
 
 		if(this.isCollided) {game.shipLife--; this.isCollided = false;} //玩家飞船被击中减血
 		if(game.isGetLifes) {game.shipLife++; game.isGetLifes = false;} //玩家加血
 
 		if (game.shipLife > 0) this.context.drawImage(imageRepository.spaceship, this.x, this.y);
 		else {
-			this.context.clearRect(this.x, this.y, this.width, this.height);
+			this.context.clearRect(this.x, this.y, this.width + 5, this.height + 5);
 			game.gameOver();
 			this.alive = false;
 		}
@@ -646,7 +690,7 @@ function Box(maxSize) {
 		addEvevt(shipCavs,'touchmove',function(e) {
 			e.preventDefault();
 			if(e.targetTouches.length == 1 && isMove) {
-				_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
+				_this.context.clearRect(_this.x, _this.y, _this.width + 5, _this.height + 5);
 				var point = e.targetTouches[0];
 					_this.x = point.pageX - _this.width / 2;
 					_this.y = point.pageY - _this.height / 2;
@@ -705,7 +749,7 @@ Ship.prototype = new RemoveAble();
 
 	//画敌人飞船
 	this.draw = function() {
-		this.context.clearRect(this.x, this.y, this.width, this.height);
+		this.context.clearRect(this.x, this.y, this.width + 5, this.height + 5);
 		this.y += this.speed;
 		if (this.y >= this.cavsHeight || this.isCollided) {
 			if(this.isCollided) {
@@ -754,17 +798,18 @@ EnemyShip.prototype = new RemoveAble();
  	var fireRate = 80,
  		counter = 0;
 	
-	//速度
-	this.setSp = function(speedX, speedY, lifeC) {
+	//设置
+	this.setSp = function(speedX, speedY, lifeC, bossNum) {
 		this.speedX = speedX;
 		this.speedY = speedY
 		this.alive = true;
 		this.lifeCount = lifeC;
+		this.bossNum = bossNum;
 	};
 
 	//画敌人飞船
 	this.move = function() {
-		this.context.clearRect(this.x, this.y, this.width, this.height);
+		this.context.clearRect(this.x, this.y, this.width + 5, this.height + 5);
 
 		this.x += this.speedX;
 		this.y += this.speedY;
@@ -791,15 +836,16 @@ EnemyShip.prototype = new RemoveAble();
 		 } 
 
 		if (this.lifeCount <= 0) {
-				game.gameScore = game.gameScore + 500;
+				if(this.bossNum == 0) {game.gameScore = game.gameScore + 500;}
+				else game.gameScore = game.gameScore + 1000;
 				
 			return true;
 		}
 		else {
-			this.context.drawImage(imageRepository.enemyBoss1, this.x, this.y);
+			this.context.drawImage(imageRepository.enemyBoss[this.bossNum], this.x, this.y);
 			if(fireRate == counter) {
 				counter = 0;
-				this.fire();
+				this.bossNum == 0 ? this.fireTwo() : this.fireThree();
 			}
 
 		}
@@ -821,9 +867,17 @@ EnemyShip.prototype = new RemoveAble();
 	/*
 	 * 两颗子弹
 	 */
-	this.fire = function() {
-		this.bulletPool.getTwo(this.x + 6, this.y, 4,
-		                       this.x + 33, this.y, 4);
+	this.fireTwo = function() {
+		this.bulletPool.getTwo(this.x + 6, this.y + this.height / 3, 5,
+		                       this.x + this.width - 5, this.y + this.height / 3, 4);
+	};
+	/*
+	 * 三颗子弹
+	 */
+	this.fireThree = function() {
+		this.bulletPool.getThree(this.x + 6, this.y + this.height / 2, 4,
+		                       this.x + this.width / 2, this.y + this.height / 4, 5,
+		                       this.x + this.width - 6, this.y + this.height / 2, 4);
 	};
 
 	//清除
@@ -921,7 +975,7 @@ EnemyShip.prototype = new RemoveAble();
  		 		objects[j].isCollided = true;
  		 	}
 
- 		 	//玩家飞船与敌人boss碰撞判断
+ 		 	//玩家飞船与敌人boss1碰撞判断
  		 	if(objects[j].type === "userBullet" &&
 	 	 	 	  ( game.enemyBoss.x < objects[j].x + objects[j].width &&
 	 	 	 		game.enemyBoss.x + game.enemyBoss.width > objects[j].x &&
@@ -929,6 +983,17 @@ EnemyShip.prototype = new RemoveAble();
 	 	 	 		game.enemyBoss.y <  objects[j].y + objects[j].height )
 	 	 	 	  ) {
  		 		game.enemyBoss.isCollided = true;
+ 		 		objects[j].isCollided = true;
+ 		 	}
+
+ 		 	//玩家飞船与敌人boss2碰撞判断
+ 		 	if(objects[j].type === "userBullet" &&
+	 	 	 	  ( game.enemyBoss1.x < objects[j].x + objects[j].width &&
+	 	 	 		game.enemyBoss1.x + game.enemyBoss1.width > objects[j].x &&
+	 	 	 		game.enemyBoss1.y + game.enemyBoss1.height > objects[j].y &&
+	 	 	 		game.enemyBoss1.y <  objects[j].y + objects[j].height )
+	 	 	 	  ) {
+ 		 		game.enemyBoss1.isCollided = true;
  		 		objects[j].isCollided = true;
  		 	}
  		 }
