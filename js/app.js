@@ -71,26 +71,26 @@ function Game() {
 			 */
 			 
 			this.ship = new Ship();
-			var shipStartX = this.shipCavs.width/2 - imageRepository.spaceship.width/2;
-			var shipStartY = this.shipCavs.height - imageRepository.spaceship.height;
-			this.ship.init(shipStartX, shipStartY, imageRepository.spaceship.width,
+			this.shipStartX = this.shipCavs.width/2 - imageRepository.spaceship.width/2;
+			this.shipStartY = this.shipCavs.height - imageRepository.spaceship.height;
+			this.ship.init(this.shipStartX, this.shipStartY, imageRepository.spaceship.width,
 			               imageRepository.spaceship.height);
 
 			/*
 			 *敌军飞船
 			 */
-			this.enemyShip = new Box(8);
+			this.enemyShip = new Box(9);
 			this.enemyShip.init("enemy");
 			this.enemyMove = function() {
 				var eStartX = (ww - 20) * Math.random();
 				var eStartY = -20 *Math.random() + -10;
-				var eStartV = 3 * Math.random() + 2;
+				var eStartV = Math.floor(3 * Math.random()) + 2;
 				this.enemyShip.get(eStartX, eStartY, eStartV);
 			}
 			//this.enemyArr = this.enemyShip.getPool();
 			this.getP = new ObjProp();
 			//初始敌军子弹量
-			this.enemyBBox = new Box(2);
+			this.enemyBBox = new Box(6);
 			this.enemyBBox.init("enemyBullet");
 
 
@@ -122,23 +122,16 @@ function Game() {
 			//游戏结束声音
 			this.gameOverAudio = new Audio("sounds/game_over.wav");
 			this.gameOverAudio.loop = true;
-			this.gameOverAudio.volume = .25;
+			this.gameOverAudio.volume = .55;
 			this.gameOverAudio.load();
-
-			/*
-			 * 游戏结束
-			 */
-			 this.gameOver = function() {
-			 	this.backgroundAudio.pause();
-				this.gameOverAudio.currentTime = 0;
-			 	this.gameOverAudio.play();
-			 }
 
 			return true;
 		} else {return false;}
 	};
 
-	//开始游戏
+	/*
+	 *开始游戏
+	 */
 	this.start = function() {
 		this.ship.draw();
 		game.ship.move();
@@ -146,45 +139,86 @@ function Game() {
 		this.backgroundAudio.play();
 	}
 
-	//重新开始游戏
-	//游戏结束
+	/*
+	 * 游戏结束
+	 */
+	 this.gameOver = function() {
+	 	this.backgroundAudio.pause();
+		this.gameOverAudio.currentTime = 0;
+	 	this.gameOverAudio.play();
+	 }
+
+	/*
+	 *重新开始游戏
+	 */
+	 this.reStart = function() {
+	 	this.gameOverAudio.pause();
+
+	 	this.bgContext.clearRect(0, 0, this.bgCavs.width, this.bgCavs.height);
+		this.shipContext.clearRect(0, 0, this.shipCavs.width, this.shipCavs.height);
+		this.mainContext.clearRect(0, 0, this.mainCavs.width, this.mainCavs.height);
+
+		this.getP.clear();
+
+		this.background.init(0, 0, ww, wh);
+
+		this.ship.init(this.shipStartX, this.shipStartY, imageRepository.spaceship.width,
+			               imageRepository.spaceship.height);
+		this.ship.alive = true;
+
+		this.enemyShip.init("enemy");
+		this.enemyBBox.init("enemyBullet");
+
+		this.gameScore = 0;
+		this.shipLife = 3;
+
+		this.backgroundAudio.currentTime = 0;
+		this.backgroundAudio.play();
+
+		this.start();
+	 }
+	  var sc = $$('score');
+	 addEvevt(sc, 'touchstart', function() {game.reStart()});
+	
 }
 
 /**
  * 动画函数
  */
  function animate() {
-	requestAnimFrame( animate );
+	
 	game.shipLife = game.shipLife < 0 ? 0 : game.shipLife;
 	document.getElementById('score').innerHTML = game.gameScore; //分数
 	document.getElementById('life').innerHTML = game.shipLife; //生命值
 
+	game.getP.clear();
+	game.getP.inset(game.getLifes.getPool());
+	game.getP.inset(game.enemyShip.getPool());
+	game.getP.inset(game.enemyBBox.getPool());
+	game.getP.inset(game.ship.bulletPool.getPool());
+	DetectCollision();
+
 	if(game.ship.alive) {
+
+		requestAnimFrame( animate );
+
 		game.background.draw();
 		game.ship.autoFire();
 		game.ship.draw();
 		game.ship.bulletPool.animate(); 
 		game.enemyShip.animate();
 		game.enemyMove();
-		//game.enemyBBox.animate();
+		game.enemyBBox.animate();
 		if(game.gameScore > 0 &&　game.gameScore % 200 == 0) {
 			game.isLifeMove = true;
 		}
 		if(game.gameScore > 0 && game.isLifeMove) {
 			game.lifesMove();
 		}
-		game.getLifes.animate();
+		game.getLifes.animate();//console.log(game.shipLife)
 		
 	}
 	
-
-	game.getP.clear();
-	game.getP.inset(game.getLifes.getPool());
-	game.getP.inset(game.enemyShip.getPool());
-	//game.getP.inset(game.enemyBBox.getPool());
-	game.getP.inset(game.ship.bulletPool.getPool());
-	//game.getP.print();
-	DetectCollision();
 }
 
 /**
@@ -227,7 +261,7 @@ var imageRepository = new function() {
 	}
 	
 	this.background.src = "imgs/bg2.jpg";
-	this.spaceship.src = "imgs/user-ship.png";
+	this.spaceship.src = "imgs/ship.png";
 	this.bullet.src = "imgs/bullet.png";
 	this.enemy.src = "imgs/enemy1_fly_1.png";
 	this.enemyBullet.src = "imgs/bullet-enemy.png";
@@ -338,7 +372,7 @@ Background.prototype = new RemoveAble();
 
 	//画子弹
 	this.draw = function() {
-		this.context.clearRect(this.x, this.y, this.width + 2, this.height + 2);
+		this.context.clearRect(this.x, this.y, this.width, this.height);
 		/*
 		 * 对象移动
 		 */
@@ -510,7 +544,7 @@ function Box(maxSize) {
 	 * 画船
 	 */
 	this.draw = function() {
-		this.context.clearRect(this.x, this.y, this.width + 2, this.height + 2);
+		this.context.clearRect(this.x, this.y, this.width, this.height);
 
 		if(this.isCollided) {game.shipLife--; this.isCollided = false;} //玩家飞船被击中减血
 		if(game.isGetLifes) {game.shipLife++; game.isGetLifes = false;} //玩家加血
@@ -627,7 +661,7 @@ Ship.prototype = new RemoveAble();
 
 	//画敌人飞船
 	this.draw = function() {
-		this.context.clearRect(this.x, this.y, this.width + 2, this.height + 2);
+		this.context.clearRect(this.x, this.y, this.width, this.height);
 		this.y += this.speed;
 		counter++;
 		if (this.y >= this.cavsHeight || this.isCollided) {
@@ -686,9 +720,6 @@ EnemyShip.prototype = new RemoveAble();
  			return;
  		}
  		objects.push(obj);
- 	};
- 	this.print = function() {
- 		console.log(objects)
  	};
  	this.clear = function() {
  		objects = [];
