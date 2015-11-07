@@ -9,10 +9,10 @@
 
 var game = new Game();
 
-function gameInit() {
-	if(game.init())
-		game.start();
-}
+// function gameInit() {
+// 	if(game.init())
+// 		game.start();
+// }
 
 
 /**
@@ -74,7 +74,7 @@ function Game() {
 			 
 			this.ship = new Ship();
 			this.shipStartX = this.shipCavs.width/2 - imageRepository.spaceship.width/2;
-			this.shipStartY = this.shipCavs.height - imageRepository.spaceship.height;
+			this.shipStartY = this.shipCavs.height - imageRepository.spaceship.height - 50;
 			this.ship.init(this.shipStartX, this.shipStartY, imageRepository.spaceship.width,
 			               imageRepository.spaceship.height);
 
@@ -86,7 +86,7 @@ function Game() {
 			this.enemyMove = function() {
 				var eStartX = (ww - 20) * Math.random();
 				var eStartY = -20 *Math.random() + -10;
-				var eStartV = Math.floor(3 * Math.random()) + 2;
+				var eStartV = Math.floor(3 * Math.random()) + 3;
 				this.enemyShip.get(eStartX, eStartY, eStartV);
 			}
 			//this.enemyArr = this.enemyShip.getPool();
@@ -112,6 +112,15 @@ function Game() {
 			               imageRepository.enemyBoss[1].height);
 			this.enemyBoss1.setSp(1.2, 0.8, 100, 1);
 
+			//enemyBoss3
+			this.enemyBoss3 = new EnemyBoss();
+
+			this.enemyBoss3.init(this.mainCavs.width + 60, -imageRepository.enemyBoss[0].height,
+						   imageRepository.enemyBoss[0].width,
+			               imageRepository.enemyBoss[0].height);
+
+			this.enemyBoss3.setSp(1, 1, 30, 0);
+
 
 			/*
 			 * 奖励血
@@ -129,7 +138,7 @@ function Game() {
 			/*
 			 *游戏声音
 			 */
-			this.voicePool = new SoundPool(100);
+			this.voicePool = new SoundPool(150);
 			this.voicePool.init("explosion");
 
 			this.backgroundAudio = new Audio("sounds/kick_shock.wav");
@@ -143,6 +152,8 @@ function Game() {
 			this.gameOverAudio.loop = true;
 			this.gameOverAudio.volume = .55;
 			this.gameOverAudio.load();
+
+			this.checkAudio = window.setInterval(function(){checkReadyState()},1000);
 
 			return true;
 		} else {return false;}
@@ -237,11 +248,22 @@ function Game() {
 			game.enemyBoss.lifeCount = 30;
 		}
 
-		if(game.enemyBoss.lifeCount > 0 && game.gameScore > 3000) {
+		if(game.enemyBoss.lifeCount > 0 && game.gameScore > 1000) {
 			game.enemyBoss.move();
-		} else {game.enemyBoss.x = -60; game.enemyBoss.y = -60}
+		} else {game.enemyBoss.x = game.mainCavs.width + 60; game.enemyBoss.y = -60}
 
 		game.enemyBoss.bulletPool.animate();
+
+		//循环设定boss1的出现
+		if(game.gameScore > 0 && game.gameScore % 3000 == 0) {
+			game.enemyBoss3.lifeCount = 30;
+		}
+
+		if(game.enemyBoss3.lifeCount > 0 && game.gameScore > 1500) {
+			game.enemyBoss3.move();
+		} else {game.enemyBoss3.x = -60; game.enemyBoss3.y = -60}
+
+		game.enemyBoss3.bulletPool.animate();
 
 		//循环设定boss2的出现
 		if(game.gameScore > 0 && game.gameScore % 5000 == 0) {
@@ -295,7 +317,7 @@ var imageRepository = new function() {
 	function imageLoaded() {
 		numLoaded++;
 		if (numLoaded === numImages) {
-			window.gameInit();
+			game.init();	
 		}
 	}
 	for(var i = 0; i < this.background.length; i++) {
@@ -347,6 +369,24 @@ var imageRepository = new function() {
  * 声音资源
  * 
  */
+
+//加载声音资源
+ function checkReadyState() {
+	if (game.gameOverAudio.readyState === 4 && game.backgroundAudio.readyState === 4) {
+		window.clearInterval(game.checkAudio);
+		$$('loading-wapper').style.display = "none";
+		$$('start-wapper').style.display = "block";
+		var startBtn = $$('start-btn');
+		addEvevt(startBtn, 'touchstart', function() {
+			$$('start-wapper').style.display = "none";
+			$$('game-wappeer').style.display = "block";
+			game.start();
+		});
+		//game.start();
+	}
+}
+
+
 function SoundPool(maxSize) {
 	var size = maxSize; 
 	var pool = [];
@@ -421,7 +461,7 @@ function Background() {
 		this.y += this.speed;
 		if(game.gameScore > 4000 && game.gameScore < 7500) this.bgNum = 1;
 		else if(game.gameScore > 7500 && game.gameScore < 18000) this.bgNum = 2;
-		else if(game.gameScore > 18000) this.bgNum = 3;
+		else if(game.gameScore > 15000) this.bgNum = 3;
 		this.context.drawImage(imageRepository.background[this.bgNum], this.x, this.y, this.width, this.height);
 		
 		// 实现背景无缝移动
@@ -627,7 +667,7 @@ function Box(maxSize) {
 	this.type = "Ship"; //该对象
 	//this.collideWith = "enemyBullet";
 
-	var fireRate = 20;
+	var fireRate = 15;
 	var counter = 0;
 	/**
 	 * 画船
@@ -817,7 +857,7 @@ EnemyShip.prototype = new RemoveAble();
 		if(this.x < 0) {
 			this.speedX = Math.abs(this.speedX);
 		} else if(this.x > game.bgCavs.width - this.width) {
-			this.speedX = -this.speedX;
+			this.speedX = this.speedX > 0 ? -this.speedX : this.speedX;
 		}
 
 		if(this.y < this.height / 3) {
@@ -983,6 +1023,16 @@ EnemyShip.prototype = new RemoveAble();
 	 	 	 		game.enemyBoss.y <  objects[j].y + objects[j].height )
 	 	 	 	  ) {
  		 		game.enemyBoss.isCollided = true;
+ 		 		objects[j].isCollided = true;
+ 		 	}
+
+ 		 	if(objects[j].type === "userBullet" &&
+	 	 	 	  ( game.enemyBoss3.x < objects[j].x + objects[j].width &&
+	 	 	 		game.enemyBoss3.x + game.enemyBoss3.width > objects[j].x &&
+	 	 	 		game.enemyBoss3.y + game.enemyBoss3.height > objects[j].y &&
+	 	 	 		game.enemyBoss3.y <  objects[j].y + objects[j].height )
+	 	 	 	  ) {
+ 		 		game.enemyBoss3.isCollided = true;
  		 		objects[j].isCollided = true;
  		 	}
 

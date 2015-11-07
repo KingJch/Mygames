@@ -3,13 +3,65 @@
 <head>
 	<meta charset="UTF-8">
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
-	<title>飞机大战</title>
+	<title>宇宙争霸</title>
 	<link rel="stylesheet" href="css/game.css">
+	<style>
+		#loading-wapper {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			background: -webkit-linear-gradient(360deg, #867B83, #846F49, #775B6F);
+			background: linear-gradient(360deg, #867B83, #846F49, #775B6F);
+			overflow: hidden;
+			
+		}
+		#loading-count {
+			position: absolute;;
+			top: 45%;
+			left: 50%;
+			transform: translateX(-50%);
+			-webkit-transform: translateX(-50%);
+			-o-transform: translateX(-50%);
+			-moz-transform: translateX(-50%);
+			font-size: 19px;
+    		color: #D9EF09;
+    		animation: loading-color 1s infinite;
+    		-webkit-animation: loading-color 1s infinite;
+		}
+
+		@-webkit-keyframes loading-color {
+			0% {color: #D9EF09;}
+			40{color: #E69A14;}
+			70% {color: #14E618;}
+			95% {color: #14E6DA;}
+		}
+		@keyframes loading-color {
+			0% {color: #D9EF09;}
+			40{color: #E69A14;}
+			70% {color: #14E618;}
+			95% {color: #14E6DA;}
+		}
+	</style>
 </head>
 <body>
+	<!--loading-->
+	<div id="loading-wapper">
+		<div id="loading-count">资源加载中...</div>
+	</div>
+	
+	<!--开始界面-->
+	<div id="start-wapper">
+		<p id="game-intro">
+			宇宙被巴拉巴拉外星人给占领，地球处于一片黑暗，现在你被任命去夺回宇宙。
+		</p>
+		<div id="start-btn">开始游戏</div>
+	</div>
+
 	<div id="game-wappeer">
 		<!--游戏分数-->
-		<div id="score-wapper">分数：<span id="score">400</span></div>
+		<div id="score-wapper">分数：<span id="score">0</span></div>
 		<div id="life">3</div>
 
 		<!--游戏背景画布-->
