@@ -86,7 +86,7 @@ function Game() {
 			this.enemyMove = function() {
 				var eStartX = (ww - 20) * Math.random();
 				var eStartY = -20 *Math.random() + -10;
-				var eStartV = Math.floor(3 * Math.random()) + 3;
+				var eStartV = Math.floor(4 * Math.random()) + 4;
 				this.enemyShip.get(eStartX, eStartY, eStartV);
 			}
 			//this.enemyArr = this.enemyShip.getPool();
@@ -329,7 +329,15 @@ var imageRepository = new function() {
 	function imageLoaded() {
 		numLoaded++;
 		if (numLoaded === numImages) {
-			game.init();	
+			game.init();
+			$$('loading-wapper').style.display = "none";
+			$$('start-wapper').style.display = "block";
+			var startBtn = $$('start-btn');
+			addEvevt(startBtn, 'touchstart', function() {
+				$$('start-wapper').style.display = "none";
+				$$('game-wappeer').style.display = "block";
+				game.start();
+			});
 		}
 	}
 	for(var i = 0; i < this.background.length; i++) {
@@ -386,14 +394,6 @@ var imageRepository = new function() {
  function checkReadyState() {
 	if (game.gameOverAudio.readyState === 4 && game.backgroundAudio.readyState === 4) {
 		window.clearInterval(game.checkAudio);
-		$$('loading-wapper').style.display = "none";
-		$$('start-wapper').style.display = "block";
-		var startBtn = $$('start-btn');
-		addEvevt(startBtn, 'touchstart', function() {
-			$$('start-wapper').style.display = "none";
-			$$('game-wappeer').style.display = "block";
-			game.start();
-		});
 		//game.start();
 	}
 }
@@ -788,8 +788,8 @@ function Box(maxSize) {
 	 * 两颗子弹
 	 */
 	this.fire = function() {
-		this.bulletPool.getTwo(this.x + 6, this.y, 4,
-		                       this.x + 33, this.y, 4);
+		this.bulletPool.getTwo(this.x + 6, this.y, 6,
+		                       this.x + 33, this.y, 6);
 	};
 }
 Ship.prototype = new RemoveAble();
