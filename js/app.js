@@ -86,7 +86,7 @@ function Game() {
 			this.enemyMove = function() {
 				var eStartX = (ww - 20) * Math.random();
 				var eStartY = -20 *Math.random() + -10;
-				var eStartV = Math.floor(4 * Math.random()) + 4;
+				var eStartV = Math.floor(2 * Math.random()) + 4;
 				this.enemyShip.get(eStartX, eStartY, eStartV);
 			}
 			//this.enemyArr = this.enemyShip.getPool();
@@ -138,8 +138,8 @@ function Game() {
 			/*
 			 *游戏声音
 			 */
-			this.voicePool = new SoundPool(200);
-			this.voicePool.init("explosion");
+			// this.voicePool = new SoundPool(200);
+			// this.voicePool.init("explosion");
 
 			this.backgroundAudio = new Audio("sounds/kick_shock.wav");
 			this.backgroundAudio.loop = true;
@@ -333,7 +333,8 @@ var imageRepository = new function() {
 			$$('loading-wapper').style.display = "none";
 			$$('start-wapper').style.display = "block";
 			var startBtn = $$('start-btn');
-			addEvevt(startBtn, 'touchstart', function() {
+			var tap = 'ontouchstart' in document.documentElement ? 'touchstart' : 'click';
+			addEvevt(startBtn, tap, function() {
 				$$('start-wapper').style.display = "none";
 				$$('game-wappeer').style.display = "block";
 				game.start();
@@ -537,7 +538,7 @@ Background.prototype = new RemoveAble();
 		}
 
 		// if(object === "enemyBullet" && this.isCollided ) {
-		// 	game.voicePool.get();console.log(0)
+		// 	game.<<voicePool></voicePool>></voicePool>.get();console.log(0)
 		// }
 	};
 	
@@ -722,6 +723,8 @@ function Box(maxSize) {
 			clickX = 0, 
 			clickY = 0,
 			isMove = false;
+
+		var isSupportTouch = "ontouchend" in document ? true : false;
 		//this.draw();
 		var touchMove = function(e) {
 			var point = e.targetTouches[0];
@@ -735,43 +738,56 @@ function Box(maxSize) {
 		}
 		var shipCavs = $$('ship-move');
 
-		//addEvevt('body',"touchstart",function() {console.log(11)});
-		addEvevt(shipCavs,'touchstart',function(e) {
-			e.preventDefault();
-			if(e.targetTouches.length == 1) {
-				//
-				var point = e.targetTouches[0];
-				//_this.draw();
-				if((point.pageX >= _this.x - 15 && point.pageX <= _this.x + _this.width + 15)  && 
-					(point.pageY >= _this.y - 15 && point.pageY <= _this.y + _this.height + 15) ) {
-					_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
-					isMove = true;
-					_this.x = point.pageX - _this.width / 2;
-					_this.y = point.pageY - _this.height / 2;
-					
+		if(isSupportTouch) {
+			addEvevt(shipCavs,'touchstart',function(e) {
+				e.preventDefault();
+				if(e.targetTouches.length == 1) {
+					//
+					var point = e.targetTouches[0];
+					//_this.draw();
+					if((point.pageX >= _this.x - 15 && point.pageX <= _this.x + _this.width + 15)  && 
+						(point.pageY >= _this.y - 15 && point.pageY <= _this.y + _this.height + 15) ) {
+						_this.context.clearRect(_this.x, _this.y, _this.width, _this.height);
+						isMove = true;
+						_this.x = point.pageX - _this.width / 2;
+						_this.y = point.pageY - _this.height / 2;
+						
+					}
 				}
-			}
-			
-		});
+				
+			});
 
-		addEvevt(shipCavs,'touchmove',function(e) {
-			e.preventDefault();
-			if(e.targetTouches.length == 1 && isMove) {
-				_this.context.clearRect(_this.x, _this.y, _this.width + 5, _this.height + 5);
-				var point = e.targetTouches[0];
-					_this.x = point.pageX - _this.width / 2;
-					_this.y = point.pageY - _this.height / 2;
-					_this.draw();
-				}			
-		});
+			addEvevt(shipCavs,'touchmove',function(e) {
+				e.preventDefault();
+				if(e.targetTouches.length == 1 && isMove) {
+					_this.context.clearRect(_this.x, _this.y, _this.width + 5, _this.height + 5);
+					var point = e.targetTouches[0];
+						_this.x = point.pageX - _this.width / 2;
+						_this.y = point.pageY - _this.height / 2;
+						_this.draw();
+					}			
+			});
 
-		addEvevt(shipCavs,'touchend',function(e) {
-			e.preventDefault();
-			isMove = false;
+			addEvevt(shipCavs,'touchend',function(e) {
+				e.preventDefault();
+				isMove = false;
+				
+			});
 			
-		});
-		
-	};
+		} else {
+			addEvevt(shipCavs,'mousemove',function(e) {
+				e.preventDefault();
+				
+					_this.context.clearRect(_this.x, _this.y, _this.width + 5, _this.height + 5);
+					
+						_this.x = e.pageX - _this.width / 2;
+						_this.y = e.pageY - _this.height / 2;
+						_this.draw();
+						
+			});
+		}
+	}
+			
 	/**
 	 *自动开炮
 	 */
@@ -788,8 +804,8 @@ function Box(maxSize) {
 	 * 两颗子弹
 	 */
 	this.fire = function() {
-		this.bulletPool.getTwo(this.x + 6, this.y, 6,
-		                       this.x + 33, this.y, 6);
+		this.bulletPool.getTwo(this.x + 6, this.y, 4.5,
+		                       this.x + 33, this.y, 4.5);
 	};
 }
 Ship.prototype = new RemoveAble();
@@ -821,7 +837,7 @@ Ship.prototype = new RemoveAble();
 		if (this.y >= this.cavsHeight || this.isCollided) {
 			if(this.isCollided) {
 				game.gameScore = game.gameScore + 10;
-				game.voicePool.get();  //敌军爆炸的声音
+				//game.voicePool.get();  //敌军爆炸的声音
 			}
 			return true;
 		}
@@ -899,7 +915,7 @@ EnemyShip.prototype = new RemoveAble();
 		if(this.isCollided) {
 			this.lifeCount--;
 		 	this.isCollided = false;
-		 	game.voicePool.get();  //敌军爆炸的声音
+		 	//game.voicePool.get();  //敌军爆炸的声音
 		 } 
 
 		if (this.lifeCount <= 0) {
